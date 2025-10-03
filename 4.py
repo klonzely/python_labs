@@ -1,3 +1,4 @@
-name=str(input("имя "))
-vs=int(input("возраст "))
-print(f"Привет,{name}!Через год тебе будет {vs+1}.")
+min=int(input())
+min2=min%60
+hour=min/60
+print(f'{int(hour)}:{min2}')

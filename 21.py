@@ -1,7 +1,0 @@
-a=(input('a: '))
-a=a.replace(',','.')
-a=float(a)
-b=(input('b: '))
-b=b.replace(',','.')
-b=float(b)
-print(f"sum={a+b}; avg={(a+b)/2:.2f}")
