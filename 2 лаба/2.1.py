@@ -2,7 +2,7 @@ mat=[[1, 2, 3]]
 def transpose(mat: list[list[float | int]]) -> list[list]:
     if len(mat)==0:
         return []
-    for i in range (len(mat)):
+    for i in range (len(mat)-1):
         if len(mat[i])!=len(mat[i+1]):
             return ValueError
     transp = []
