@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
-sys.path.insert(0, os.path.dirname(file))
+sys.path.insert(0, os.path.dirname(__file__))
 from lib.text import normalize, tokenize, count_freq, top_n
 
 text = sys.stdin.read().strip()
