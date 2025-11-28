@@ -428,6 +428,214 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
 ![скриншот задания 2](/src/5%20лаба/img/1.2.png)
 
 
+# Лабораторная работа 6
+## Задание 1.1
+```python
+#!/usr/bin/env python3
+"""
+CLI-утилиты для конвертации данных
+"""
+
+import argparse
+import sys
+import os
+
+# Добавляем путь к корню проекта для импорта модулей
+sys.path.insert(0, os.path.join(os.path.dirname(file), '../../..'))
+
+try:
+    from src.lab05.json_csv import json_to_csv, csv_to_json
+    from src.lab05.csv_xlsx import csv_to_xlsx
+except ImportError as e:
+    print(f"Ошибка импорта модулей lab05: {e}")
+    print("Убедитесь, что модули lab05 существуют и корректно реализованы")
+    sys.exit(1)
+
+def json2csv_command(input_file, output_file):
+    """Конвертация JSON в CSV"""
+    try:
+        json_to_csv(input_file, output_file)
+        print(f"Успешно сконвертировано: {input_file} -> {output_file}")
+    except Exception as e:
+        print(f"Ошибка при конвертации JSON в CSV: {e}")
+        sys.exit(1)
+
+def csv2json_command(input_file, output_file):
+    """Конвертация CSV в JSON"""
+    try:
+        csv_to_json(input_file, output_file)
+        print(f"Успешно сконвертировано: {input_file} -> {output_file}")
+    except Exception as e:
+        print(f"Ошибка при конвертации CSV в JSON: {e}")
+        sys.exit(1)
+
+def csv2xlsx_command(input_file, output_file):
+    """Конвертация CSV в XLSX"""
+    try:
+        csv_to_xlsx(input_file, output_file)
+        print(f"Успешно сконвертировано: {input_file} -> {output_file}")
+    except Exception as e:
+        print(f"Ошибка при конвертации CSV в XLSX: {e}")
+        sys.exit(1)
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Конвертеры данных между форматами JSON, CSV и XLSX",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Доступные команды конвертации")
+
+    # Подкоманда json2csv
+    json2csv_parser = subparsers.add_parser("json2csv", help="Конвертировать JSON в CSV")
+    json2csv_parser.add_argument("--in", dest="input", required=True, help="Входной JSON файл")
+    json2csv_parser.add_argument("--out", dest="output", required=True, help="Выходной CSV файл")
+
+    # Подкоманда csv2json
+    csv2json_parser = subparsers.add_parser("csv2json", help="Конвертировать CSV в JSON")
+    csv2json_parser.add_argument("--in", dest="input", required=True, help="Входной CSV файл")
+    csv2json_parser.add_argument("--out", dest="output", required=True, help="Выходной JSON файл")
+
+    # Подкоманда csv2xlsx
+    csv2xlsx_parser = subparsers.add_parser("csv2xlsx", help="Конвертировать CSV в XLSX")
+    csv2xlsx_parser.add_argument("--in", dest="input", required=True, help="Входной CSV файл")
+    csv2xlsx_parser.add_argument("--out", dest="output", required=True, help="Выходной XLSX файл")
+
+    args = parser.parse_args()
+
+    if args.command == "json2csv":
+        json2csv_command(args.input, args.output)
+    elif args.command == "csv2json":
+        csv2json_command(args.input, args.output)
+    elif args.command == "csv2xlsx":
+        csv2xlsx_command(args.input, args.output)
+    else:
+        parser.print_help()
+
+if name == "main":
+    main()
+```
+![скриншот задания 1](/src/5%20лаба/img/1.2.png)
+## Задание 1.2
+```python
+#!/usr/bin/env python3
+"""
+CLI-утилиты для работы с текстом
+"""
+
+import argparse
+import sys
+import re
+from collections import Counter
+
+def read_file(file_path):
+    """
+    Чтение файла с автоматическим определением кодировки
+    """
+    encodings = ['utf-8', 'cp1251', 'iso-8859-1', 'windows-1251']
+    
+    for encoding in encodings:
+        try:
+            with open(file_path, 'r', encoding=encoding) as file:
+                return file.read()
+        except UnicodeDecodeError:
+            continue
+            
+    raise UnicodeDecodeError(f"Не удалось декодировать файл {file_path}")
+
+def calculate_word_frequency(text):
+    """
+    Анализ частотности слов в тексте
+    """
+    # Приводим к нижнему регистру и находим слова
+    words = re.findall(r'\b[а-яёa-z]+\b', text.lower())
+    return Counter(words)
+
+def get_top_words(frequency, top_n=5):
+    """
+    Получение топ-N самых частых слов
+    """
+    return frequency.most_common(top_n)
+
+def cat_command(input_file, number_lines=False):
+    """
+    Реализация команды cat - вывод содержимого файла
+    """
+    try:
+        content = read_file(input_file)
+        lines = content.split('\n')
+        
+        for i, line in enumerate(lines, 1):
+            if number_lines:
+                print(f"{i:6d}\t{line}")
+            else:
+                print(line)
+                
+    except FileNotFoundError:
+        print(f"Ошибка: файл '{input_file}' не найден")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Ошибка при чтении файла: {e}")
+        sys.exit(1)
+
+def stats_command(input_file, top_n=5):
+    """
+    Реализация команды stats - анализ частот слов
+    """
+    try:
+        content = read_file(input_file)
+        if not content.strip():
+            print("Файл пуст")
+            return
+            
+        frequency = calculate_word_frequency(content)
+        top_words = get_top_words(frequency, top_n)
+        
+        print(f"Топ-{top_n} самых частых слов в файле '{input_file}':")
+        print("-" * 40)
+        for i, (word, count) in enumerate(top_words, 1):
+            print(f"{i:2d}. {word:<15} {count:>4} раз")
+            
+    except FileNotFoundError:
+        print(f"Ошибка: файл '{input_file}' не найден")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Ошибка при анализе текста: {e}")
+        sys.exit(1)
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="CLI-утилиты для работы с текстом",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Доступные команды")
+
+    # Подкоманда cat
+    cat_parser = subparsers.add_parser("cat", help="Вывести содержимое файла")
+    cat_parser.add_argument("--input", required=True, help="Входной файл")
+    cat_parser.add_argument("-n", action="store_true", help="Нумеровать строки")
+
+    # Подкоманда stats
+    stats_parser = subparsers.add_parser("stats", help="Анализ частот слов")
+    stats_parser.add_argument("--input", required=True, help="Входной текстовый файл")
+    stats_parser.add_argument("--top", type=int, default=5, help="Количество топ-слов (по умолчанию: 5)")
+
+    args = parser.parse_args()
+
+    if args.command == "cat":
+        cat_command(args.input, args.n)
+    elif args.command == "stats":
+        stats_command(args.input, args.top)
+    else:
+        parser.print_help()
+
+if name == "main":
+    main()
+```
+![скриншот задания 2](/src/5%20лаба/img/1.2.png)
+
+
+
+
 
 
 
