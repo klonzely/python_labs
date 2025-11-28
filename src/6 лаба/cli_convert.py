@@ -78,5 +78,5 @@ def main():
     else:
         parser.print_help()
 
-if name == "main":
+if __name__ == "main":
     main()
