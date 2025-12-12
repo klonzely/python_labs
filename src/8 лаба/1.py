@@ -69,26 +69,28 @@ if __name__ == "__main__":
         # Создание студента
         student = Student(
             fio="Иванов Иван Иванович",
-            birthdate="2000-05-15",
+            birthdate="3000-05-15",
             group="ИТ-101",
             gpa=4.5
         )
         
-        # Тестирование методов
         print(student)
-        print("\nСловарь:", student.to_dict())
         
-        # Создание из словаря
-        student2 = Student.from_dict({
-            "fio": "Петров Петр Петрович",
-            "birthdate": "2001-08-20",
-            "group": "ФИ-201",
-            "gpa": 3.8
-        })
-        print(f"\n{student2}")
+        # # Тестирование методов
+        # print(student)
+        # print("\nСловарь:", student.to_dict())
         
-        # Тест валидации (раскомментировать для проверки)
-        # student3 = Student("Тест", "2000-13-45", "Группа", 6.0)  # Ошибка валидации
+        # # Создание из словаря
+        # student2 = Student.from_dict({
+        #     "fio": "Петров Петр Петрович",
+        #     "birthdate": "2001-08-20",
+        #     "group": "ФИ-201",
+        #     "gpa": 3.8
+        # })
+        # print(f"\n{student2}")
+        
+        # # Тест валидации (раскомментировать для проверки)
+        # # student3 = Student("Тест", "2000-13-45", "Группа", 6.0)  # Ошибка валидации
         
     except ValueError as e:
         print(f"Ошибка валидации: {e}")
