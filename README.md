@@ -1638,7 +1638,6 @@ class Queue:
         """
         return f"Queue({list(self._data)})"
 ```
-![скриншот задания 2](/src/8%20лаба/img/№1.png)
 ## Задание 2
 ```python
 from typing import Any, Optional, Iterator
