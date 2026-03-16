@@ -11,7 +11,7 @@ class Student:
     birthdate: str  # Формат: YYYY-MM-DD
     group: str
     gpa: float
-    _birthdate_obj: date = field(init=False, repr=False)  # Внутренний объект даты
+    # _birthdate_obj: date = field(init=False, repr=False)  # Внутренний объект даты
     
     def __post_init__(self):
         """Валидация данных после инициализации объекта."""
